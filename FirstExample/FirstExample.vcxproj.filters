@@ -13,24 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\Helper Files">
+      <UniqueIdentifier>{b6ff1574-de9f-425d-9bdb-164e864ec343}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="LoadShaders.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\SOIL\src\image_DXT.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Helper Files</Filter>
     </ClCompile>
     <ClCompile Include="..\SOIL\src\image_helper.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Helper Files</Filter>
     </ClCompile>
     <ClCompile Include="..\SOIL\src\SOIL.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Helper Files</Filter>
     </ClCompile>
     <ClCompile Include="..\SOIL\src\stb_image_aug.c">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Helper Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="LoadShaders.cpp">
+      <Filter>Source Files\Helper Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelCube.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,22 +47,25 @@
     <ClInclude Include="main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModelCube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Object Include="Debug\LoadShaders.obj">
-      <Filter>Source Files</Filter>
-    </Object>
     <Object Include="Debug\image_DXT.obj">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Helper Files</Filter>
     </Object>
     <Object Include="Debug\image_helper.obj">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Helper Files</Filter>
     </Object>
-    <Object Include="Debug\SOIL.obj">
-      <Filter>Source Files</Filter>
+    <Object Include="Debug\LoadShaders.obj">
+      <Filter>Source Files\Helper Files</Filter>
     </Object>
     <Object Include="Debug\stb_image_aug.obj">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Helper Files</Filter>
+    </Object>
+    <Object Include="Debug\SOIL.obj">
+      <Filter>Source Files\Helper Files</Filter>
     </Object>
   </ItemGroup>
   <ItemGroup>

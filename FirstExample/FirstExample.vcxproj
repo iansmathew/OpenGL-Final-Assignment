@@ -92,10 +92,12 @@
     <ClCompile Include="..\SOIL\src\stb_image_aug.c" />
     <ClCompile Include="LoadShaders.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ModelCube.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Dropbox\oglpg-8th-edition\include\LoadShaders.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="ModelCube.h" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\image_DXT.obj" />

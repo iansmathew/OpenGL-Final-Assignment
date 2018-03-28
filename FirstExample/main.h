@@ -1,7 +1,15 @@
 #pragma once
 
-void initCubeBuffers();
+void display();
 
-void initCamera(const GLuint &program);
+void timer(int id);
 
-void initTextures(const GLuint &program);
+void init();
+
+void initCamera();
+
+void uploadMatrixToShader();
+
+void pushToStack();
+
+void popFromStack();
