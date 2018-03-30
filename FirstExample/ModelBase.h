@@ -12,12 +12,13 @@ public:
 	~ModelBase();
 
 protected:
-	GLuint vao;
-	GLuint buffers[4];
-	GLuint texture;
 	int NUM_BUFFERS = 4;
 	int NUM_DRAW_ELEMENTS = 24;
 	int NUM_VERTICES = 24;
+
+	GLuint vao;
+	GLuint buffers[4];
+	GLuint texture;
 
 public:
 	virtual void init(const GLuint program) = 0;

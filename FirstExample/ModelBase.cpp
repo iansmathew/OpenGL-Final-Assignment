@@ -1,7 +1,9 @@
 #include "ModelBase.h"
 
 
-
+//-----------------------------------------------------------------------------
+//Constructs the object and sets the number of vertices and elements
+//-----------------------------------------------------------------------------
 ModelBase::ModelBase(int _numVertices, int _numDrawElements)
 {
 	NUM_DRAW_ELEMENTS = _numDrawElements;
@@ -13,9 +15,13 @@ ModelBase::~ModelBase()
 {
 }
 
+//-----------------------------------------------------------------------------
 //Sets up the buffers and textures of the objects.
 //All unique model data is defined within this function.
 //Override this function in derived classes using the following template
+//The following MUST BE defined and passed into initBuffers & initTextures
+//	vertices, colors, texCoords, indices, texWidth, texHeight, texImage
+//-----------------------------------------------------------------------------
 void ModelBase::init(const GLuint program)
 {
 	//Defining the vertices, colors and indices for the object
@@ -145,7 +151,9 @@ void ModelBase::init(const GLuint program)
 	initTextures(program, width, height, image);
 }
 
-//Initializes and feeds the buffers with model data
+//-----------------------------------------------------------------------------
+//Initializes and feeds the buffers with model data passed in init
+//-----------------------------------------------------------------------------
 void ModelBase::initBuffers(const GLuint program, const GLfloat vertices[], const GLfloat colors[], GLfloat texCoords[], GLuint indices[])
 {
 	glGenVertexArrays(1, &vao);
@@ -155,28 +163,30 @@ void ModelBase::initBuffers(const GLuint program, const GLfloat vertices[], cons
 
 	//Vertex buffer
 	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * NUM_VERTICES, vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(0);
 
 	//Color buffer
 	glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colors), colors, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colors) * NUM_VERTICES, colors, GL_STATIC_DRAW);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(1);
 
 	//Texture buffer
 	glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords), texCoords, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords) * NUM_VERTICES, texCoords, GL_STATIC_DRAW);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(2);
 
 	//Index buffer
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[3]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * NUM_DRAW_ELEMENTS, indices, GL_STATIC_DRAW);
 }
 
+//-----------------------------------------------------------------------------
 //Initializes the texture and sends it to the uniform
+//-----------------------------------------------------------------------------
 void ModelBase::initTextures(const GLuint program, int width, int height, unsigned char* image)
 {
 	glGenTextures(1, &texture);
@@ -191,7 +201,9 @@ void ModelBase::initTextures(const GLuint program, int width, int height, unsign
 	glUniform1i(glGetUniformLocation(program, "texture0"), 0);
 }
 
+//-----------------------------------------------------------------------------
 //Draws the model with defined NUM_DRAW_ELEMENTS
+//-----------------------------------------------------------------------------
 void ModelBase::draw()
 {
 	glBindVertexArray(vao); //bind to the objects vao

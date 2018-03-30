@@ -48,14 +48,14 @@ float FOV = 45.0f;
 float aspectRatio = 800.0f / 800.0f;
 
 //Model Objects
-ModelCube cubeObject;
+ModelCube cubeObject(24, 24);
 
 
 //-- FUNCTIONS --//
 
-/*
-	Main Function
-*/
+//-----------------------------------------------------------------------------
+//Main Function
+//-----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -76,10 +76,9 @@ int main(int argc, char** argv)
 	glutMainLoop();
 }
 
-/*
-	Initialize
-*/
-
+//-----------------------------------------------------------------------------
+//Initialize
+//-----------------------------------------------------------------------------
 void init()
 {
 	glEnable(GL_DEPTH_TEST);
@@ -94,28 +93,28 @@ void init()
 	glUseProgram(shaderProgram);
 
 	initCamera();
+
+	/* Initialize objects here */
 	cubeObject.init(shaderProgram);
 }
 
-/*
-	Render function
-*/
-
+//-----------------------------------------------------------------------------
+//Render function
+//-----------------------------------------------------------------------------
 void display()
 {
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//Draw objects
+	/* Draw objects here */
 	cubeObject.draw();
 
 	glutSwapBuffers();
-
 }
 
-/*
-	Frame based loop function
-*/
+//-----------------------------------------------------------------------------
+//Frame based loop function
+//-----------------------------------------------------------------------------
 void timer(int id)
 {
 
@@ -124,13 +123,17 @@ void timer(int id)
 // -- CAMERA AND VIEW FUNCTIONS -- //
 #pragma region CAMERA_AND_VIEW
 
-// Push the current modelViewMatrix to the stack.
+//-----------------------------------------------------------------------------
+//Push the current modelViewMatrix to the stack.
+//-----------------------------------------------------------------------------
 void pushToStack()
 {
 	modelViewStack.push_back(modelMatrix);
 }
 
+//-----------------------------------------------------------------------------
 //Pops the last modelViewMatrix from stack and copies it to the current matrix.
+//-----------------------------------------------------------------------------
 void popFromStack()
 {
 	if (modelViewStack.empty())
@@ -140,8 +143,9 @@ void popFromStack()
 
 }
 
-
+//-----------------------------------------------------------------------------
 //Pushes MVP matrix to shader program.
+//-----------------------------------------------------------------------------
 void uploadMatrixToShader()
 {
 	glm::mat4 modelViewProjection = glm::mat4(1.0f);
@@ -149,6 +153,9 @@ void uploadMatrixToShader()
 	glUniformMatrix4fv(uMVP, 1, GL_FALSE, glm::value_ptr(modelViewProjection));
 }
 
+//-----------------------------------------------------------------------------
+//Initializes camera and sets position
+//-----------------------------------------------------------------------------
 void initCamera()
 {
 	uMVP = glGetUniformLocation(shaderProgram, "uMVP");

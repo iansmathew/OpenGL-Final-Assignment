@@ -2,7 +2,8 @@
 #include "SOIL.h"
 
 
-ModelCube::ModelCube()
+ModelCube::ModelCube(int _numVertices, int _numElements) :
+	ModelBase(_numVertices, _numElements)
 {
 	
 }
@@ -12,10 +13,13 @@ ModelCube::~ModelCube()
 {
 }
 
-void ModelCube::init(const GLuint program)
-{	//Defining the vertices, colors and indices for the object
+//-----------------------------------------------------------------------------
+//Overriding the base init and feeding unique model data
+//-----------------------------------------------------------------------------
+void ModelCube::init(GLuint program)
+{
 
-	//TODO: Fix passing the array, only the first element is passed
+	//Defining the vertices, colors and indices for the object
 
 	GLfloat vertices[] =
 	{
@@ -140,55 +144,4 @@ void ModelCube::init(const GLuint program)
 
 	initBuffers(program, vertices, colors, texCoords, indices);
 	initTextures(program, width, height, image);
-}
-
-void ModelCube::initBuffers(const GLuint program, const GLfloat* vertices, const GLfloat* colors, GLfloat* texCoords, GLuint* indices)
-{
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	glGenBuffers(4, buffers);
-
-	//Vertex buffer
-	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]); 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * NUM_VERTICES, vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-
-	//Color buffer
-	glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colors) * NUM_VERTICES, colors, GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(1);
-
-	//Texture buffer
-	glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords) * NUM_VERTICES, texCoords, GL_STATIC_DRAW);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(2);
-
-	//Index buffer
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[3]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * NUM_VERTICES, indices, GL_STATIC_DRAW);
-}
-
-void ModelCube::initTextures(const GLuint program, int width, int height, unsigned char* image)
-{
-	glGenTextures(1, &texture);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glUniform1i(glGetUniformLocation(program, "texture0"), 0);
-}
-
-void ModelCube::draw()
-{
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[3]);
-	glDrawElements(GL_TRIANGLES, NUM_DRAW_ELEMENTS, GL_UNSIGNED_INT, 0);
 }
