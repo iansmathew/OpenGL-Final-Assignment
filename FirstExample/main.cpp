@@ -21,6 +21,7 @@
 #include "SOIL.h"
 
 #include "ModelCube.h"
+#include "ModelPyramid.h"
 
 #include "main.h"
 
@@ -48,7 +49,7 @@ float FOV = 45.0f;
 float aspectRatio = 800.0f / 800.0f;
 
 //Model Objects
-ModelCube cubeObject(24, 24);
+ModelPyramid pyramidObject(15, 16);
 
 
 //-- FUNCTIONS --//
@@ -95,7 +96,7 @@ void init()
 	initCamera();
 
 	/* Initialize objects here */
-	cubeObject.init(shaderProgram);
+	pyramidObject.init(shaderProgram);
 }
 
 //-----------------------------------------------------------------------------
@@ -107,7 +108,7 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	/* Draw objects here */
-	cubeObject.draw();
+	pyramidObject.draw();
 
 	glutSwapBuffers();
 }
