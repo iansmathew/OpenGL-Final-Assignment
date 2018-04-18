@@ -24,11 +24,11 @@ void Camera::mouseUpdate(const glm::vec2 & newMousePosition)
 		return;
 	}
 
-	cameraViewDir = glm::rotate(cameraViewDir, mouseDelta.x * -0.001f, UP_DIR);
+	cameraViewDir = glm::rotate(cameraViewDir, mouseDelta.x * -0.005f, UP_DIR);
 
 	//Vertical rotation
 	glm::vec3 rightVec = glm::cross(cameraViewDir, UP_DIR);
-	cameraViewDir = glm::rotate(cameraViewDir, mouseDelta.y * -0.001f, rightVec);
+	cameraViewDir = glm::rotate(cameraViewDir, mouseDelta.y * -0.005f, rightVec);
 
 
 	oldMousePos = newMousePosition;
@@ -52,14 +52,14 @@ void Camera::moveBack()
 void Camera::strafeLeft()
 {
 	glm::vec3 rightVec = glm::cross(cameraViewDir, UP_DIR);
-	cameraPos += MOVEMENT_SPEED * rightVec;
+	cameraPos -= MOVEMENT_SPEED * rightVec;
 
 }
 
 void Camera::strafeRight()
 {
 	glm::vec3 rightVec = glm::cross(cameraViewDir, UP_DIR);
-	cameraPos -= MOVEMENT_SPEED * rightVec;
+	cameraPos += MOVEMENT_SPEED * rightVec;
 
 }
 

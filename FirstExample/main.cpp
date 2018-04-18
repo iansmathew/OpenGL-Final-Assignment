@@ -42,7 +42,7 @@ Camera camera;
 
 float radius = 3.0f;
 float FOV = 45.0f;
-float aspectRatio = 800.0f / 800.0f;
+float aspectRatio = 1920.f / 1080.f;
 
 bool keyStates[256];
 
@@ -64,14 +64,14 @@ int main(int argc, char** argv)
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
 
-	glutInitWindowSize(800, 800);
+	glutInitWindowSize(1920, 1080);
 	glutCreateWindow("Final Assignment");
 	glewInit();
 
 	init();
 
 	glutDisplayFunc(display);
-	glutTimerFunc(33.3, timer, 0);
+	glutTimerFunc(1000.0 / 60.0, timer, 0);
 	glutPassiveMotionFunc(mouseMoveEvent);
 	glutKeyboardUpFunc(keyUp);
 	glutKeyboardFunc(keyDown);
@@ -112,7 +112,6 @@ void display()
 	/* Draw objects here */
 	pyramidObject.draw();
 
-
 	glutSwapBuffers();
 }
 
@@ -121,9 +120,9 @@ void display()
 //-----------------------------------------------------------------------------
 void timer(int id)
 {
-	//controlCamera();
+	controlCamera();
 	glutPostRedisplay();
-	glutTimerFunc(33, timer, 0);
+	glutTimerFunc(1000.0 / 60.0, timer, 0);
 }
 
 //-----------------------------------------------------------------------------
@@ -131,7 +130,6 @@ void timer(int id)
 //-----------------------------------------------------------------------------
 void mouseMoveEvent(int x, int y)
 {
-
 	mousePos.x = x;
 	mousePos.y = y;
 	camera.mouseUpdate(mousePos);
@@ -144,22 +142,7 @@ void mouseMoveEvent(int x, int y)
 //-----------------------------------------------------------------------------
 void keyDown(unsigned char key, int x, int y)
 {
-	switch (key)
-	{
-		case 'w':
-			camera.moveForward();
-			break;
-		case 's':
-			camera.moveBack();
-			break;
-		case 'd':
-			camera.strafeLeft();
-			break;
-		case 'a':
-			camera.strafeRight();
-			break;
-	}
-	glutPostRedisplay();
+	keyStates[key] = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -167,7 +150,7 @@ void keyDown(unsigned char key, int x, int y)
 //-----------------------------------------------------------------------------
 void keyUp(unsigned char key, int x, int y)
 {
-	//keyStates[key] = false;
+	keyStates[key] = false;
 }
 
 //-----------------------------------------------------------------------------
@@ -175,29 +158,16 @@ void keyUp(unsigned char key, int x, int y)
 //-----------------------------------------------------------------------------
 void controlCamera()
 {
-
-	if (keyStates['d'])
-	{
-		camera.strafeLeft();
-	}
-
-
-	if (keyStates['a'])
-	{
-		camera.strafeRight();
-	}
-
-
 	if (keyStates['w'])
-	{
 		camera.moveForward();
-	}
-
-	if (keyStates['s'])
-	{
+	else if (keyStates['s'])
 		camera.moveBack();
+	else if (keyStates['a'])
+		camera.strafeLeft();
+	else if (keyStates['d'])
+		camera.strafeRight();
 
-	}
+	viewMatrix = camera.getViewMatrix();
 }
 
 // -- CAMERA AND VIEW FUNCTIONS -- //
