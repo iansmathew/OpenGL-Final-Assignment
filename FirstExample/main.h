@@ -13,3 +13,10 @@ void uploadMatrixToShader();
 void pushToStack();
 
 void popFromStack();
+
+void mouseMoveEvent(int x, int y);
+
+void keyDown(unsigned char key, int x, int y);
+void keyUp(unsigned char key, int x, int y);
+
+void controlCamera();

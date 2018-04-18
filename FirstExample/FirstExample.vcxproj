@@ -90,6 +90,7 @@
     <ClCompile Include="..\SOIL\src\image_helper.c" />
     <ClCompile Include="..\SOIL\src\SOIL.c" />
     <ClCompile Include="..\SOIL\src\stb_image_aug.c" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="LoadShaders.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelBase.cpp" />
@@ -98,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Dropbox\oglpg-8th-edition\include\LoadShaders.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="ModelBase.h" />
     <ClInclude Include="ModelPyramid.h" />

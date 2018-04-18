@@ -20,6 +20,7 @@
 #include "glm\gtx\rotate_vector.hpp"
 #include "SOIL.h"
 
+#include "Camera.h"
 #include "ModelCube.h"
 #include "ModelPyramid.h"
 
@@ -27,7 +28,7 @@
 
 //Program pointers
 GLuint shaderProgram;
-GLuint uMVP; 
+GLuint uMVP;
 
 //Matrices
 std::list<glm::mat4> modelViewStack;
@@ -36,17 +37,14 @@ glm::mat4 modelMatrix;
 glm::mat4 viewMatrix;
 
 //Camera properties
-glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 camInitialPos = glm::vec3(0.0f, 0.0f, 10.0f);
-glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f); //let camera point towards origin.
-glm::vec3 cameraDirection = glm::normalize(camInitialPos - cameraTarget); //z-axis forward of camera. Faces opposite direction of cameraTarget.
-glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-glm::vec3 cameraUp = glm::normalize(glm::cross(cameraDirection, cameraRight));
-glm::vec3 cameraPos = camInitialPos;
+glm::vec2 mousePos;
+Camera camera;
 
 float radius = 3.0f;
 float FOV = 45.0f;
 float aspectRatio = 800.0f / 800.0f;
+
+bool keyStates[256];
 
 //Model Objects
 ModelPyramid pyramidObject(15, 16);
@@ -74,6 +72,9 @@ int main(int argc, char** argv)
 
 	glutDisplayFunc(display);
 	glutTimerFunc(33.3, timer, 0);
+	glutPassiveMotionFunc(mouseMoveEvent);
+	glutKeyboardUpFunc(keyUp);
+	glutKeyboardFunc(keyDown);
 	glutMainLoop();
 }
 
@@ -83,11 +84,11 @@ int main(int argc, char** argv)
 void init()
 {
 	glEnable(GL_DEPTH_TEST);
-	ShaderInfo shaders[] = 
+	ShaderInfo shaders[] =
 	{
-		{GL_VERTEX_SHADER, "triangles.vert"},
-		{GL_FRAGMENT_SHADER, "triangles.frag"},
-		{GL_NONE, NULL}
+		{ GL_VERTEX_SHADER, "triangles.vert" },
+	{ GL_FRAGMENT_SHADER, "triangles.frag" },
+	{ GL_NONE, NULL }
 	};
 
 	shaderProgram = LoadShaders(shaders);
@@ -107,8 +108,10 @@ void display()
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	uploadMatrixToShader();
 	/* Draw objects here */
 	pyramidObject.draw();
+
 
 	glutSwapBuffers();
 }
@@ -118,7 +121,83 @@ void display()
 //-----------------------------------------------------------------------------
 void timer(int id)
 {
+	//controlCamera();
+	glutPostRedisplay();
+	glutTimerFunc(33, timer, 0);
+}
 
+//-----------------------------------------------------------------------------
+//Mouse move event
+//-----------------------------------------------------------------------------
+void mouseMoveEvent(int x, int y)
+{
+
+	mousePos.x = x;
+	mousePos.y = y;
+	camera.mouseUpdate(mousePos);
+	viewMatrix = camera.getViewMatrix();
+	glutPostRedisplay();
+}
+
+//-----------------------------------------------------------------------------
+//On key down
+//-----------------------------------------------------------------------------
+void keyDown(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+		case 'w':
+			camera.moveForward();
+			break;
+		case 's':
+			camera.moveBack();
+			break;
+		case 'd':
+			camera.strafeLeft();
+			break;
+		case 'a':
+			camera.strafeRight();
+			break;
+	}
+	glutPostRedisplay();
+}
+
+//-----------------------------------------------------------------------------
+//On key up
+//-----------------------------------------------------------------------------
+void keyUp(unsigned char key, int x, int y)
+{
+	//keyStates[key] = false;
+}
+
+//-----------------------------------------------------------------------------
+//Move camera with keyboard
+//-----------------------------------------------------------------------------
+void controlCamera()
+{
+
+	if (keyStates['d'])
+	{
+		camera.strafeLeft();
+	}
+
+
+	if (keyStates['a'])
+	{
+		camera.strafeRight();
+	}
+
+
+	if (keyStates['w'])
+	{
+		camera.moveForward();
+	}
+
+	if (keyStates['s'])
+	{
+		camera.moveBack();
+
+	}
 }
 
 // -- CAMERA AND VIEW FUNCTIONS -- //
@@ -164,7 +243,7 @@ void initCamera()
 	///Initializing matrices
 	modelMatrix = glm::mat4(1.0f);
 
-	viewMatrix = glm::lookAt(camInitialPos, cameraTarget, up);
+	viewMatrix = camera.getViewMatrix();
 
 	projectionMatrix = glm::mat4(1.0f);
 	projectionMatrix = glm::perspective(glm::radians(FOV), aspectRatio, 0.1f, 100.0f);
