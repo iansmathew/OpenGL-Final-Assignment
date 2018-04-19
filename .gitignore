@@ -288,4 +288,4 @@ __pycache__/
 *.xsd.cs
 
 #Unignore under media
-!Media/
+!Media/Model/*
