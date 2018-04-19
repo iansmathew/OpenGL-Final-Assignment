@@ -23,5 +23,7 @@ public:
 	void strafeLeft();
 	void strafeRight();
 
+	glm::vec3 getCameraPosition() const { return cameraPos; }
+
 };
 

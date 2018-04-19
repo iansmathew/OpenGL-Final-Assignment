@@ -4,42 +4,36 @@
 //-----------------------------------------------------------------------------
 //Constructs the object and sets the number of vertices and elements
 //-----------------------------------------------------------------------------
-ModelBase::ModelBase(int _numVertices, int _numDrawElements)
+ModelBase::ModelBase(const GLuint program, const char* objPath, const char* texturePath)
 {
-	NUM_DRAW_ELEMENTS = _numDrawElements;
-	NUM_VERTICES = _numVertices;
-}
-
-
-ModelBase::~ModelBase()
-{
+	init(program, objPath, texturePath);
 }
 
 //-----------------------------------------------------------------------------
 //Sets up the buffers and textures of the objects.
-//All unique model data is defined within this function.
-//Override this function in derived classes using the following template
-//The following MUST BE defined and passed into initBuffers & initTextures
-//	vertices, colors, texCoords, indices, texWidth, texHeight, texImage
 //-----------------------------------------------------------------------------
-void ModelBase::init(const GLuint program)
+void ModelBase::init(const GLuint program, const char* objPath, const char* texturePath)
 {
+	//Loading object model data
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> texCoords;
 	std::vector<glm::vec3> normals;
 
-	loadObj( "cube.obj", vertices, texCoords, normals);
+	if (!loadObj(objPath, vertices, texCoords, normals))
+	{
+		printf("Failed to load obj file." + *objPath);
+	}
 
-	//Defining texture
+	initBuffers(program, vertices, texCoords, normals); 
+
+	//Loading textures
 	int width;
 	int height;
-	unsigned char* image = SOIL_load_image("rubiksTexture.png", &width, &height, 0, SOIL_LOAD_RGB);
+	unsigned char* image = SOIL_load_image(texturePath, &width, &height, 0, SOIL_LOAD_RGB);
 
-
-	initBuffers(program, vertices, texCoords, normals);
 	initTextures(program, width, height, image);
 
-	NUM_VERTICES = vertices.size();
+	NUM_VERTICES = vertices.size(); //set vertex size for draw call
 }
 
 //-----------------------------------------------------------------------------
@@ -88,8 +82,13 @@ void ModelBase::initTextures(const GLuint program, int width, int height, unsign
 	glUniform1i(glGetUniformLocation(program, "texture0"), 0);
 }
 
+//-----------------------------------------------------------------------------
+// Loads an obj file and populates vertices, texCoords and normals.
+// Returns false if failed to load
+//-----------------------------------------------------------------------------
 bool ModelBase::loadObj(const char * fileName, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_texCoords, std::vector<glm::vec3>& out_normals)
 {
+	//Create temporary holders
 	std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
 	std::vector< glm::vec3 > temp_vertices;
 	std::vector< glm::vec2 > temp_uvs;
@@ -130,15 +129,16 @@ bool ModelBase::loadObj(const char * fileName, std::vector<glm::vec3>& out_verti
 			temp_normals.push_back(normal);
 		}
 
-		else if (strcmp(lineHeader, "f") == 0) 
+		else if (strcmp(lineHeader, "f") == 0)  //if its f
 		{
 			std::string vertex1, vertex2, vertex3;
 			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]); //extract the data as defined in obj file vertex / texture / normal for 3 vertices
 			if (matches != 9) {
-				printf("File can't be read by our simple parser : ( Try exporting with other options\n");
+				printf("File can't be read by our simple parser : ( Try exporting with other options\n" + *fileName);
 				return false;
 			}
+			//add it to the respective index arrays
 			vertexIndices.push_back(vertexIndex[0]);
 			vertexIndices.push_back(vertexIndex[1]);
 			vertexIndices.push_back(vertexIndex[2]);
@@ -150,7 +150,7 @@ bool ModelBase::loadObj(const char * fileName, std::vector<glm::vec3>& out_verti
 			normalIndices.push_back(normalIndex[2]);
 		}
 
-		//Process the data indivually since Blender uses indices starting from 1
+		///Process the data indivually since Blender uses indices starting from 1
 		for (unsigned int i = 0; i < vertexIndices.size(); i++)
 		{
 			unsigned int vertexIndex = vertexIndices[i];

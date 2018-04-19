@@ -94,16 +94,14 @@
     <ClCompile Include="LoadShaders.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelBase.cpp" />
-    <ClCompile Include="ModelPyramid.cpp" />
-    <ClCompile Include="ModelCube.cpp" />
+    <ClCompile Include="ShapeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Dropbox\oglpg-8th-edition\include\LoadShaders.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="ModelBase.h" />
-    <ClInclude Include="ModelPyramid.h" />
-    <ClInclude Include="ModelCube.h" />
+    <ClInclude Include="ShapeGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\image_DXT.obj" />

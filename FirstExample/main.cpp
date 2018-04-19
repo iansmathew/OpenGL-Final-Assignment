@@ -4,10 +4,7 @@
 // Final Assignment submission.
 // 
 // Description:
-//	- Click run to see the results
-//  - A & D keys - Move left right
-//	- W & S keys - Move forward and backwards
-//	- R & F keys - Move up and down
+//	- Move camera with WASD and mouse to look around
 //*****************************************************************************
 
 #include <iostream>
@@ -21,13 +18,20 @@
 #include "SOIL.h"
 
 #include "Camera.h"
-#include "ModelBase.h"
-
+#include "ShapeGenerator.h"
 #include "main.h"
 
 //Program pointers
 GLuint shaderProgram;
 GLuint uMVP;
+GLuint uModelMatrix;
+
+//Light Attributes
+float ambientStrength = 0.1f;
+float specularStrength = 0.25f;
+float diffuseStrength  = 0.5f;
+glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 lightPosition = { 10.0f, 10.0f, 10.0f };
 
 //Matrices
 std::list<glm::mat4> modelViewStack;
@@ -45,8 +49,8 @@ float aspectRatio = 1920.f / 1080.f;
 
 bool keyStates[256];
 
-//Model Objects
-ModelBase cube(1, 1);
+//Objects
+ShapeGenerator shapeGenerator;
 
 //-- FUNCTIONS --//
 
@@ -93,9 +97,9 @@ void init()
 	glUseProgram(shaderProgram);
 
 	initCamera();
-
+	initLights();
+	shapeGenerator.init(shaderProgram);
 	/* Initialize objects here */
-	cube.init(shaderProgram);
 }
 
 //-----------------------------------------------------------------------------
@@ -108,7 +112,10 @@ void display()
 
 	uploadMatrixToShader();
 	/* Draw objects here */
-	cube.draw();
+	pushToStack();
+
+	drawDemoShapes();
+
 	glutSwapBuffers();
 }
 
@@ -150,23 +157,6 @@ void keyUp(unsigned char key, int x, int y)
 	keyStates[key] = false;
 }
 
-//-----------------------------------------------------------------------------
-//Move camera with keyboard
-//-----------------------------------------------------------------------------
-void controlCamera()
-{
-	if (keyStates['w'])
-		camera.moveForward();
-	else if (keyStates['s'])
-		camera.moveBack();
-	else if (keyStates['a'])
-		camera.strafeLeft();
-	else if (keyStates['d'])
-		camera.strafeRight();
-
-	viewMatrix = camera.getViewMatrix();
-}
-
 // -- CAMERA AND VIEW FUNCTIONS -- //
 #pragma region CAMERA_AND_VIEW
 
@@ -198,6 +188,33 @@ void uploadMatrixToShader()
 	glm::mat4 modelViewProjection = glm::mat4(1.0f);
 	modelViewProjection = projectionMatrix * viewMatrix * modelMatrix;
 	glUniformMatrix4fv(uMVP, 1, GL_FALSE, glm::value_ptr(modelViewProjection));
+	glUniformMatrix4fv(uModelMatrix, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+}
+
+
+//-----------------------------------------------------------------------------
+//Initializes lights and uniform pointers
+//-----------------------------------------------------------------------------
+void initLights()
+{
+	GLuint uAmbientStrength = glGetUniformLocation(shaderProgram, "ambientStrength");
+	glUniform1f(uAmbientStrength, ambientStrength);
+
+	GLuint uSpecularStrength = glGetUniformLocation(shaderProgram, "specularStrength");
+	glUniform1f(uSpecularStrength, specularStrength);
+
+
+	GLuint uDiffuseStrength = glGetUniformLocation(shaderProgram, "diffuseStrength");
+	glUniform1f(uDiffuseStrength, diffuseStrength);
+
+	GLuint uLightColor = glGetUniformLocation(shaderProgram, "lightColor");
+	glUniform3fv(uLightColor, 1, glm::value_ptr(lightColor));
+
+	GLuint uLightPos = glGetUniformLocation(shaderProgram, "lightPos");
+	glUniform3fv(uLightPos, 1, glm::value_ptr(lightPosition));
+
+	GLuint uViewPos = glGetUniformLocation(shaderProgram, "viewPos");
+	glUniform3fv(uViewPos, 1, glm::value_ptr(camera.getCameraPosition()));
 }
 
 //-----------------------------------------------------------------------------
@@ -206,6 +223,7 @@ void uploadMatrixToShader()
 void initCamera()
 {
 	uMVP = glGetUniformLocation(shaderProgram, "uMVP");
+	uModelMatrix = glGetUniformLocation(shaderProgram, "model");
 
 	///Initializing matrices
 	modelMatrix = glm::mat4(1.0f);
@@ -218,4 +236,105 @@ void initCamera()
 	uploadMatrixToShader();
 }
 
+//-----------------------------------------------------------------------------
+//Move camera with keyboard
+//-----------------------------------------------------------------------------
+void controlCamera()
+{
+	if (keyStates['w'])
+		camera.moveForward();
+	if (keyStates['s'])
+		camera.moveBack();
+	if (keyStates['a'])
+		camera.strafeLeft();
+	if (keyStates['d'])
+		camera.strafeRight();
+
+	viewMatrix = camera.getViewMatrix();
+	GLuint uViewPos = glGetUniformLocation(shaderProgram, "viewPos");
+	glUniform3fv(uViewPos, 1, glm::value_ptr(camera.getCameraPosition()));
+}
+
 #pragma endregion //CAMERA_AND_VIEW
+
+void drawDemoShapes()
+{
+	pushToStack();
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.f, 0.0f, 0.0f));
+	shapeGenerator.drawCube();
+
+	uploadMatrixToShader();
+	popFromStack();
+
+	pushToStack();
+
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(5.f, 0.0f, 0.0f));
+	shapeGenerator.drawCone();
+
+	uploadMatrixToShader();
+	popFromStack();
+
+	pushToStack();
+
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(10.f, 0.0f, 0.0f));
+	shapeGenerator.drawCutCone();
+
+	uploadMatrixToShader();
+	popFromStack();
+
+	pushToStack();
+
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(15.f, 0.0f, 0.0f));
+	shapeGenerator.drawDiamond();
+
+	uploadMatrixToShader();
+	popFromStack();
+
+	pushToStack();
+
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(20.f, 0.0f, 0.0f));
+	shapeGenerator.drawFrustum();
+
+	uploadMatrixToShader();
+	popFromStack();
+
+	pushToStack();
+
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(25.f, 0.0f, 0.0f));
+	shapeGenerator.drawHalfHexagon();
+
+	uploadMatrixToShader();
+	popFromStack();
+
+	pushToStack();
+
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(30.f, 0.0f, 0.0f));
+	shapeGenerator.drawHexagon();
+
+	uploadMatrixToShader();
+	popFromStack();
+
+	pushToStack();
+
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(35.f, 0.0f, 0.0f));
+	shapeGenerator.drawPrism();
+
+	uploadMatrixToShader();
+	popFromStack();
+
+	pushToStack();
+
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(40.f, 0.0f, 0.0f));
+	shapeGenerator.drawPyramid();
+
+	uploadMatrixToShader();
+	popFromStack();
+
+	pushToStack();
+
+	modelMatrix = glm::translate(modelMatrix, glm::vec3(45.f, 0.0f, 0.0f));
+	shapeGenerator.drawWedge();
+
+	uploadMatrixToShader();
+	popFromStack();
+}
