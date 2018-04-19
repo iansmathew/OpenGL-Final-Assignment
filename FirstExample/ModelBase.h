@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+#include <fstream>
+
+
 #include "vgl.h"
 #include "glm\glm.hpp"
 #include "glm\gtc\type_ptr.hpp"
@@ -21,11 +25,13 @@ protected:
 	GLuint texture;
 
 public:
-	virtual void init(const GLuint program) = 0;
+	virtual void init(const GLuint program);
 	void draw();
 
 protected:
-	void initBuffers(const GLuint program, const GLfloat vertices[], const GLfloat colors[], GLfloat texCoords[], GLuint indices[]);
+	void initBuffers(const GLuint program, std::vector<glm::vec3> &vertices, std::vector<glm::vec2> &texCoords, std::vector<glm::vec3> &normals);
 	void initTextures(const GLuint program, int width, int height, unsigned char* image);
+
+	bool loadObj(const char* fileName, std::vector<glm::vec3> &vertices, std::vector<glm::vec2> &texCoords, std::vector<glm::vec3> &normals);
 };
 

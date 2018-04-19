@@ -21,8 +21,7 @@
 #include "SOIL.h"
 
 #include "Camera.h"
-#include "ModelCube.h"
-#include "ModelPyramid.h"
+#include "ModelBase.h"
 
 #include "main.h"
 
@@ -47,8 +46,7 @@ float aspectRatio = 1920.f / 1080.f;
 bool keyStates[256];
 
 //Model Objects
-ModelPyramid pyramidObject(15, 16);
-
+ModelBase cube(1, 1);
 
 //-- FUNCTIONS --//
 
@@ -97,7 +95,7 @@ void init()
 	initCamera();
 
 	/* Initialize objects here */
-	pyramidObject.init(shaderProgram);
+	cube.init(shaderProgram);
 }
 
 //-----------------------------------------------------------------------------
@@ -110,8 +108,7 @@ void display()
 
 	uploadMatrixToShader();
 	/* Draw objects here */
-	pyramidObject.draw();
-
+	cube.draw();
 	glutSwapBuffers();
 }
 

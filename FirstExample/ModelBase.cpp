@@ -24,122 +24,11 @@ ModelBase::~ModelBase()
 //-----------------------------------------------------------------------------
 void ModelBase::init(const GLuint program)
 {
-	//Defining the vertices, colors and indices for the object
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec2> texCoords;
+	std::vector<glm::vec3> normals;
 
-	GLfloat vertices[] =
-	{
-		-0.45f, -0.45f,  0.45f,	//v0
-		0.45f, -0.45f,  0.45f,	//v1
-		0.45f,  0.45f,  0.45f,	//v2
-		-0.45f,  0.45f,  0.45f,	//v3 //front
-
-		-0.45f, -0.45f, -0.45f,	//v4 
-		0.45f, -0.45f, -0.45f,	//v5
-		0.45f,  0.45f, -0.45f,	//v6
-		-0.45f,  0.45f, -0.45f,	//v7 //back
-
-		0.45f, -0.45f,  0.45f,	//v1 8
-		0.45f, -0.45f, -0.45f,	//v5 9
-		0.45f,  0.45f, -0.45f,	//v6 10 
-		0.45f,  0.45f,  0.45f,	//v2 11
-
-		-0.45f, -0.45f, -0.45f,	//v4 12
-		-0.45f, -0.45f,  0.45f,	//v0 13
-		-0.45f,  0.45f,  0.45f,	//v3 14
-		-0.45f,  0.45f, -0.45f,	//v7 15
-
-		-0.45f,  0.45f,  0.45f,	//v3 16
-		0.45f,  0.45f,  0.45f,	//v2 17
-		0.45f,  0.45f, -0.45f,	//v6 18
-		-0.45f,  0.45f, -0.45f,	//v7 19
-
-		-0.45f, -0.45f, -0.45f,	//v4 20
-		0.45f, -0.45f, -0.45f,	//v5 21
-		0.45f, -0.45f,  0.45f,	//v1 22
-		-0.45f, -0.45f, 0.45f, //v0 23
-	};
-
-	GLfloat colors[] =
-	{
-		-0.45f, -0.45f,  0.45f,	//v0
-		0.45f, -0.45f,  0.45f,	//v1
-		0.45f,  0.45f,  0.45f,	//v2
-		-0.45f,  0.45f,  0.45f,	//v3 //front
-
-		-0.45f, -0.45f, -0.45f,	//v4 
-		0.45f, -0.45f, -0.45f,	//v5
-		0.45f,  0.45f, -0.45f,	//v6
-		-0.45f,  0.45f, -0.45f,	//v7 //back
-
-		0.45f, -0.45f,  0.45f,	//v1 8
-		0.45f, -0.45f, -0.45f,	//v5 9
-		0.45f,  0.45f, -0.45f,	//v6 10 
-		0.45f,  0.45f,  0.45f,	//v2 11
-
-		-0.45f, -0.45f, -0.45f,	//v4 12
-		-0.45f, -0.45f,  0.45f,	//v0 13
-		-0.45f,  0.45f,  0.45f,	//v3 14
-		-0.45f,  0.45f, -0.45f,	//v7 15
-
-		-0.45f,  0.45f,  0.45f,	//v3 16
-		0.45f,  0.45f,  0.45f,	//v2 17
-		0.45f,  0.45f, -0.45f,	//v6 18
-		-0.45f,  0.45f, -0.45f,	//v7 19
-
-		-0.45f, -0.45f, -0.45f,	//v4 20
-		0.45f, -0.45f, -0.45f,	//v5 21
-		0.45f, -0.45f,  0.45f,	//v1 22
-		-0.45f, -0.45f, 0.45f, //v0 23
-	};
-
-	GLfloat texCoords[] =
-	{
-		0.25f, 0.6666666f, //front
-		0.50f, 0.6666666f,
-		0.50f, 0.3333333f,
-		0.25f, 0.3333333f,
-
-		0.75f, 0.6666666f, //back
-		1.0f, 0.6666666f,
-		1.0f, 0.3333333f,
-		0.75f, 0.3333333f,
-
-		0.50f, 0.6666666f, //right
-		0.75f, 0.6666666f,
-		0.75, 0.3333333f,
-		0.50f, 0.3333333f,
-
-		0.0f, 0.6666666f, //left
-		0.25f, 0.6666666f,
-		0.25f, 0.3333333f,
-		0.0f, 0.3333333f,
-
-		0.25f, 0.33333333f, //top
-		0.50f, 0.3333333f,
-		0.50f, 0.0f,
-		0.25f, 0.0f,
-
-		0.25f, 0.999999999f, //bottom
-		0.50f, 0.99999999f,
-		0.50f, 0.66666666f,
-		0.25f, 0.6666666f,
-	};
-
-	GLuint indices[] =
-	{
-		0, 1, 2, //front
-		0, 2, 3,
-		5, 4, 7, //back
-		5, 7, 6,
-		8, 9, 10, //right
-		8, 10, 11,
-		12, 13, 14, //left
-		12, 14, 15,
-		16, 17, 18,
-		16, 18, 19,
-		20, 21, 22,
-		20, 22, 23
-	};
+	loadObj( "cube.obj", vertices, texCoords, normals);
 
 	//Defining texture
 	int width;
@@ -147,41 +36,39 @@ void ModelBase::init(const GLuint program)
 	unsigned char* image = SOIL_load_image("rubiksTexture.png", &width, &height, 0, SOIL_LOAD_RGB);
 
 
-	initBuffers(program, vertices, colors, texCoords, indices);
+	initBuffers(program, vertices, texCoords, normals);
 	initTextures(program, width, height, image);
+
+	NUM_VERTICES = vertices.size();
 }
 
 //-----------------------------------------------------------------------------
 //Initializes and feeds the buffers with model data passed in init
 //-----------------------------------------------------------------------------
-void ModelBase::initBuffers(const GLuint program, const GLfloat vertices[], const GLfloat colors[], GLfloat texCoords[], GLuint indices[])
+void ModelBase::initBuffers(const GLuint program, std::vector<glm::vec3> &vertices, std::vector<glm::vec2> &texCoords, std::vector<glm::vec3> &normals)
 {
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	glGenBuffers(4, buffers);
+	glGenBuffers(3, buffers);
 
 	//Vertex buffer
 	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * NUM_VERTICES, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(0);
 
-	//Color buffer
+	//Texture buffer
 	glBindBuffer(GL_ARRAY_BUFFER, buffers[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(colors) * NUM_VERTICES, colors, GL_STATIC_DRAW);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+	glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(glm::vec2), &texCoords[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(1);
 
-	//Texture buffer
+	//Normal buffer
 	glBindBuffer(GL_ARRAY_BUFFER, buffers[2]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(texCoords) * NUM_VERTICES, texCoords, GL_STATIC_DRAW);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
+	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(2);
-
-	//Index buffer
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[3]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices) * NUM_DRAW_ELEMENTS, indices, GL_STATIC_DRAW);
 }
 
 //-----------------------------------------------------------------------------
@@ -201,12 +88,99 @@ void ModelBase::initTextures(const GLuint program, int width, int height, unsign
 	glUniform1i(glGetUniformLocation(program, "texture0"), 0);
 }
 
+bool ModelBase::loadObj(const char * fileName, std::vector<glm::vec3>& out_vertices, std::vector<glm::vec2>& out_texCoords, std::vector<glm::vec3>& out_normals)
+{
+	std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
+	std::vector< glm::vec3 > temp_vertices;
+	std::vector< glm::vec2 > temp_uvs;
+	std::vector< glm::vec3 > temp_normals;
+
+	FILE* file = fopen(fileName, "r");
+	if (file == NULL)
+	{
+		printf("Unable to open file: " + *fileName);
+		return false;
+	}
+
+	while (1)
+	{
+		char lineHeader[128]; //assuming a single line does not hold more than 128 chars
+
+		int res = fscanf(file, "%s", lineHeader); //read the first word of the line
+		if (res == EOF) //if reached EOF
+			break;
+
+		//Getting vertices
+		if (strcmp(lineHeader, "v") == 0) //if the first word is v
+		{
+			glm::vec3 vertex;
+			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
+			temp_vertices.push_back(vertex);
+		}
+		else if (strcmp(lineHeader, "vt") == 0) //if the first word is vt
+		{
+			glm::vec2 uvCoord;
+			fscanf(file, "%f %f %f\n", &uvCoord.x, &uvCoord.y);
+			temp_uvs.push_back(uvCoord);
+		}
+		else if (strcmp(lineHeader, "vn") == 0) //if the first word is vn
+		{
+			glm::vec3 normal;
+			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
+			temp_normals.push_back(normal);
+		}
+
+		else if (strcmp(lineHeader, "f") == 0) 
+		{
+			std::string vertex1, vertex2, vertex3;
+			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+			if (matches != 9) {
+				printf("File can't be read by our simple parser : ( Try exporting with other options\n");
+				return false;
+			}
+			vertexIndices.push_back(vertexIndex[0]);
+			vertexIndices.push_back(vertexIndex[1]);
+			vertexIndices.push_back(vertexIndex[2]);
+			uvIndices.push_back(uvIndex[0]);
+			uvIndices.push_back(uvIndex[1]);
+			uvIndices.push_back(uvIndex[2]);
+			normalIndices.push_back(normalIndex[0]);
+			normalIndices.push_back(normalIndex[1]);
+			normalIndices.push_back(normalIndex[2]);
+		}
+
+		//Process the data indivually since Blender uses indices starting from 1
+		for (unsigned int i = 0; i < vertexIndices.size(); i++)
+		{
+			unsigned int vertexIndex = vertexIndices[i];
+			glm::vec3 vertex = temp_vertices[vertexIndex - 1];
+			out_vertices.push_back(vertex);
+		}
+
+		for (unsigned int i = 0; i < uvIndices.size(); i++)
+		{
+			unsigned int uvIndex = uvIndices[i];
+			glm::vec2 uv = temp_uvs[uvIndex - 1];
+			out_texCoords.push_back(uv);
+		}
+
+		for (unsigned int i = 0; i < normalIndices.size(); i++)
+		{
+			unsigned int normalIndex = normalIndices[i];
+			glm::vec3 normal = temp_normals[normalIndex - 1];
+			out_normals.push_back(normal);
+		}
+		
+	}
+}
+
 //-----------------------------------------------------------------------------
 //Draws the model with defined NUM_DRAW_ELEMENTS
 //-----------------------------------------------------------------------------
 void ModelBase::draw()
 {
 	glBindVertexArray(vao); //bind to the objects vao
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[3]); //bind to the index buffer
-	glDrawElements(GL_TRIANGLES, NUM_DRAW_ELEMENTS, GL_UNSIGNED_INT, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, buffers[0]); //bind to the index buffer
+	glDrawArrays(GL_TRIANGLES, 0, NUM_VERTICES);
 }
