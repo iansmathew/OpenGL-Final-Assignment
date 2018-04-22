@@ -1,7 +1,28 @@
 #pragma once
 
-void initCubeBuffers();
+void display();
 
-void initCamera(const GLuint &program);
+void timer(int id);
 
-void initTextures(const GLuint &program);
+void init();
+
+void initCamera();
+
+void initLights();
+
+void uploadMatrixToShader();
+
+void pushToStack();
+
+void popFromStack();
+
+void mouseMoveEvent(int x, int y);
+
+void keyDown(unsigned char key, int x, int y);
+void keyUp(unsigned char key, int x, int y);
+
+void controlCamera();
+
+void drawDemoShapes();
+
+void TranslateRotateScale(glm::vec3 translation, float rotationAngle, glm::vec3 rotationAxis, glm::vec3 scaleRatio);

@@ -1,16 +1,25 @@
 #version 430 core
+
+//Inputs
 layout(location = 0) in vec3 vPosition;
-layout (location = 1) in vec3 vColor;
-layout (location = 2) in vec2 vTexture;
+layout (location = 1) in vec3 vTexture;
+layout (location = 2) in vec3 vNormal;
 
-out vec3 outColor;
-out vec2 texCoord;
+//Outputs
+out vec3 texCoord;
+out vec3 normal;
+out vec3 fragPos;
 
+//Uniforms
 uniform mat4 uMVP;
+uniform mat4 model;
+
 
 void main()
 {
-	outColor = vColor;
+	gl_Position = uMVP * vec4(vPosition,1.0f);
+
 	texCoord = vTexture;
-	gl_Position = uMVP * vec4(vPosition, 1.0f);
+	normal = mat3(transpose(inverse(model))) * vNormal;  
+	fragPos = vec3(model * vec4(vPosition, 1.0));
 }
