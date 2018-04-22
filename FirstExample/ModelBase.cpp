@@ -4,15 +4,15 @@
 //-----------------------------------------------------------------------------
 //Constructs the object and sets the number of vertices and elements
 //-----------------------------------------------------------------------------
-ModelBase::ModelBase(const GLuint program, const char* objPath, const char* texturePath)
+ModelBase::ModelBase(const GLuint program, const char* objPath)
 {
-	init(program, objPath, texturePath);
+	init(program, objPath);
 }
 
 //-----------------------------------------------------------------------------
 //Sets up the buffers and textures of the objects.
 //-----------------------------------------------------------------------------
-void ModelBase::init(const GLuint program, const char* objPath, const char* texturePath)
+void ModelBase::init(const GLuint program, const char* objPath)
 {
 	//Loading object model data
 	std::vector<glm::vec3> vertices;
@@ -21,17 +21,10 @@ void ModelBase::init(const GLuint program, const char* objPath, const char* text
 
 	if (!loadObj(objPath, vertices, texCoords, normals))
 	{
-		printf("Failed to load obj file." + *objPath);
+		std::cout << ("Failed to load obj file." + *objPath);
 	}
 
 	initBuffers(program, vertices, texCoords, normals); 
-
-	//Loading textures
-	int width;
-	int height;
-	unsigned char* image = SOIL_load_image(texturePath, &width, &height, 0, SOIL_LOAD_RGB);
-
-	initTextures(program, width, height, image);
 
 	NUM_VERTICES = vertices.size(); //set vertex size for draw call
 }
@@ -65,22 +58,6 @@ void ModelBase::initBuffers(const GLuint program, std::vector<glm::vec3> &vertic
 	glEnableVertexAttribArray(2);
 }
 
-//-----------------------------------------------------------------------------
-//Initializes the texture and sends it to the uniform
-//-----------------------------------------------------------------------------
-void ModelBase::initTextures(const GLuint program, int width, int height, unsigned char* image)
-{
-	glGenTextures(1, &texture);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glUniform1i(glGetUniformLocation(program, "texture0"), 0);
-}
 
 //-----------------------------------------------------------------------------
 // Loads an obj file and populates vertices, texCoords and normals.

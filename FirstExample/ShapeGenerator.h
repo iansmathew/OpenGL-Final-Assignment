@@ -8,6 +8,7 @@ public:
 	~ShapeGenerator();
 
 private:
+	ModelBase* plane;
 	ModelBase* cube;
 	ModelBase* cone;
 	ModelBase* cutCone;
@@ -20,9 +21,11 @@ private:
 	ModelBase* torus;
 	ModelBase* wedge;
 
+
 public:
 	void init(const GLuint program);
 
+	void drawPlane()const { plane->draw(); }
 	void drawCube()	const { cube->draw(); }
 	void drawCone()	const { cone->draw(); }
 	void drawCutCone() const { cutCone->draw(); }

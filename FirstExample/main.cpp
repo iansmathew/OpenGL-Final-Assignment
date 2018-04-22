@@ -19,6 +19,7 @@
 
 #include "Camera.h"
 #include "ShapeGenerator.h"
+#include "TextureLoader.h"
 #include "main.h"
 
 //Program pointers
@@ -51,6 +52,7 @@ bool keyStates[256];
 
 //Objects
 ShapeGenerator shapeGenerator;
+TextureLoader textureLoader;
 
 //-- FUNCTIONS --//
 
@@ -100,6 +102,8 @@ void init()
 	initLights();
 	shapeGenerator.init(shaderProgram);
 	/* Initialize objects here */
+
+	textureLoader.init();
 }
 
 //-----------------------------------------------------------------------------
@@ -259,82 +263,264 @@ void controlCamera()
 
 void drawDemoShapes()
 {
+	//Floor
+	textureLoader.loadTexture(shaderProgram, Textures::GRASS);
 	pushToStack();
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(0.f, 0.0f, 0.0f));
-	shapeGenerator.drawCube();
-
 	uploadMatrixToShader();
+	TranslateRotateScale(glm::vec3(0.0f, -5.0f, 0.0f), 0.0f, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f));
+	shapeGenerator.drawPlane();
 	popFromStack();
 
+	//Hexagon Pillars
+	textureLoader.loadTexture(shaderProgram, Textures::STONE);
 	pushToStack();
-
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(5.f, 0.0f, 0.0f));
-	shapeGenerator.drawCone();
-
+	TranslateRotateScale(glm::vec3(4.0f, 2.0f, 4.0f), -10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f,2.0f,1.0f));
 	uploadMatrixToShader();
-	popFromStack();
 
-	pushToStack();
-
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(10.f, 0.0f, 0.0f));
-	shapeGenerator.drawCutCone();
-
-	uploadMatrixToShader();
-	popFromStack();
-
-	pushToStack();
-
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(15.f, 0.0f, 0.0f));
-	shapeGenerator.drawDiamond();
-
-	uploadMatrixToShader();
-	popFromStack();
-
-	pushToStack();
-
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(20.f, 0.0f, 0.0f));
-	shapeGenerator.drawFrustum();
-
-	uploadMatrixToShader();
-	popFromStack();
-
-	pushToStack();
-
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(25.f, 0.0f, 0.0f));
-	shapeGenerator.drawHalfHexagon();
-
-	uploadMatrixToShader();
-	popFromStack();
-
-	pushToStack();
-
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(30.f, 0.0f, 0.0f));
 	shapeGenerator.drawHexagon();
-
-	uploadMatrixToShader();
 	popFromStack();
 
 	pushToStack();
-
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(35.f, 0.0f, 0.0f));
-	shapeGenerator.drawPrism();
-
+	TranslateRotateScale(glm::vec3(4.0f, 2.0f, -4.0f), 10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 2.0f, 1.0f));
 	uploadMatrixToShader();
+
+	shapeGenerator.drawHexagon();
 	popFromStack();
 
 	pushToStack();
-
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(40.f, 0.0f, 0.0f));
-	shapeGenerator.drawPyramid();
-
+	TranslateRotateScale(glm::vec3(-4.0f, 2.0f, 4.0f), -10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 2.0f, 1.0f));
 	uploadMatrixToShader();
+
+	shapeGenerator.drawHexagon();
 	popFromStack();
 
 	pushToStack();
+	TranslateRotateScale(glm::vec3(-4.0f, 2.0f, -4.0f), 10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 2.0f, 1.0f));
+	uploadMatrixToShader();
 
-	modelMatrix = glm::translate(modelMatrix, glm::vec3(45.f, 0.0f, 0.0f));
+	shapeGenerator.drawHexagon();
+	popFromStack();
+
+	//Pillars HalfTop
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(4.0f, 4.0f, 4.0f), -10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCutCone();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(4.0f, 4.0f, -4.0f), 10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCutCone();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(-4.0f, 4.0f, 4.0f), -10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCutCone();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(-4.0f, 4.0f, -4.0f), 10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCutCone();
+	popFromStack();
+
+	//Pillar Top
+	textureLoader.loadTexture(shaderProgram, Textures::GOLD);
+	pushToStack();
+	TranslateRotateScale(glm::vec3(4.0f, 6.0f, 4.0f), -10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.8f, 1.2f, 0.8f));
+	uploadMatrixToShader();
+	
+	shapeGenerator.drawCone();
+	popFromStack();
+
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(4.0f, 6.0f, -4.0f), 10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.8f, 1.2f, 0.8f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCone();
+	popFromStack();
+
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(-4.0f, 6.0f, 4.0f), -10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.8f, 1.2f, 0.8f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCone();
+	popFromStack();
+
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(-4.0f, 6.0f, -4.0f), 10.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.8f, 1.2f, 0.8f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCone();
+	popFromStack();
+
+	//Castle Walls
+	textureLoader.loadTexture(shaderProgram, Textures::STONE);
+	pushToStack();
+	TranslateRotateScale(glm::vec3(-4.0f, 2.0, 0), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(.2f, 2.0f, 3.15f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCube();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(4.0f, 2.0, 0), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(.2f, 2.0f, 3.15f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCube();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(0.0f, 2.0, -4.0), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(3.15f, 2.0f, .2f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCube();
+	popFromStack();
+
+	//-->Front Wall
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(-2.5, 2.0, 4.0), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.05f, 2.0f, .2f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCube();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(2.5, 2.0, 4.0), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.05f, 2.0f, .2f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCube();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(0, 3.0, 4.0), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.45, 1.3, .2f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawCube();
+	popFromStack();
+
+	//Middle Stand
+
+	textureLoader.loadTexture(shaderProgram, Textures::COOBLESTONE);
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(0, 0.4f, 0), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.5f, 0.8, 0.5f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawFrustum();
+	popFromStack();
+
+
+	//Diamond
+
+	textureLoader.loadTexture(shaderProgram, Textures::SILVER);
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(0, 3.0f, 0), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawDiamond();
+	popFromStack();
+
+	//Diamond Top
+
+	textureLoader.loadTexture(shaderProgram, Textures::GOLD);
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(0, 5.0f, 0), 0.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawTorus();
+	popFromStack();
+
+	//Wedges
+
+	textureLoader.loadTexture(shaderProgram, Textures::WOOD);
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(2.0f, 0.5, 0), 90.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+	uploadMatrixToShader();
+
 	shapeGenerator.drawWedge();
-
-	uploadMatrixToShader();
 	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(-2.0f, 0.5, 0), -90.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawWedge();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(0.0f, 0.5, -2.0f), 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawWedge();
+	popFromStack();
+
+	//Half_Hexagons
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(0.0f, 4.3f, -4.0), 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.8, .2f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawHalfHexagon();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(4.0, 4.3f, 0.0f), 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(.2f, 0.8, 1.0f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawHalfHexagon();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(-4.0, 4.3f, 0.0f), 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(.2f, 0.8, 1.0f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawHalfHexagon();
+	popFromStack();
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(0.0f, 4.6f, 4.0), 180.0f, glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.8, .2f));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawHalfHexagon();
+	popFromStack();
+
+	//Triangle
+
+	textureLoader.loadTexture(shaderProgram, Textures::GOLD);
+
+	pushToStack();
+	TranslateRotateScale(glm::vec3(0.0f, 3.0f, 5.0f), 90.f, glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.5, 0.5));
+	uploadMatrixToShader();
+
+	shapeGenerator.drawPyramid();
+	popFromStack();
+
+
+
+
+
+
+
+	
+}
+
+void TranslateRotateScale(glm::vec3 translation, float rotationAngle, glm::vec3 rotationAxis , glm::vec3 scaleRatio){
+	modelMatrix = glm::translate(modelMatrix, translation);
+	modelMatrix = glm::rotate(modelMatrix, glm::radians(rotationAngle), rotationAxis);
+	modelMatrix = glm::scale(modelMatrix, scaleRatio);
 }
