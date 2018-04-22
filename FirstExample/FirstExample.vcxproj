@@ -95,6 +95,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ModelBase.cpp" />
     <ClCompile Include="ShapeGenerator.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\Dropbox\oglpg-8th-edition\include\LoadShaders.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="ModelBase.h" />
     <ClInclude Include="ShapeGenerator.h" />
+    <ClInclude Include="TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\image_DXT.obj" />

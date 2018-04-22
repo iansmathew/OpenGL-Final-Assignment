@@ -24,3 +24,5 @@ void keyUp(unsigned char key, int x, int y);
 void controlCamera();
 
 void drawDemoShapes();
+
+void TranslateRotateScale(glm::vec3 translation, float rotationAngle, glm::vec3 rotationAxis, glm::vec3 scaleRatio);
